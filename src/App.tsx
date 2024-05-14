@@ -1,28 +1,37 @@
-import { useEffect, useRef, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useEffect, useRef } from 'react'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
 import './App.css'
+// import Tile from './components/Tile';
+import Grid, { CellData } from './components/Grid';
+import PlayButton from './components/PlayButton';
 
 function App() {
     // const [count, setCount] = useState(0)
 
-    const ref = useRef<HTMLDivElement>(null);
-    let [x, y] = [useRef(0.0), useRef(0.0)];
+    const cellData = useRef<CellData[][]>(null);
+    const isPlaying = useRef<boolean>(false);
+    // const [x, setX] = useState<number>(0.0);
+    // const [y, setY] = useState<number>(0.0);
 
     useEffect(() => {
         let cancel: number | undefined = undefined;
-        const frame = () => {
+        let lastTime: number = Date.now();
+        const frame = async () => {
+            const currentFrameId = cancel;
             cancel = requestAnimationFrame(frame);
 
-            if (ref.current) {
+            const deltaT = (Date.now() - lastTime) / 1000.0;
 
-                x.current += 0.1;
-                y.current += 0.1;
+            if (isPlaying.current && deltaT > 3000) {
+                lastTime = Date.now()
 
-                console.log(ref.current.style.left);
-                ref.current.style.left = `${x.current}pt`;
-                ref.current.style.top = `${y.current}pt`;
+                console.log('PLAY')
             }
+
+            if (currentFrameId)
+                cancelAnimationFrame(currentFrameId);
         }
 
         frame();
@@ -35,7 +44,9 @@ function App() {
 
     return (
         <div id="container">
-            <div id="box" ref={ref}></div>
+            <Grid width={50} height={50} data={cellData} />
+            <PlayButton isPlaying={isPlaying} />
+            {/* <Tile x={x} y={y} /> */}
         </div>
     )
 

@@ -17,11 +17,40 @@
   background-color: #242424;
   color: #ffffff;
 
+  display: flex;
+
   position: fixed;
   left: 0pt;
   right: 0pt;
   top: 0pt;
   bottom: 0pt;
+}
+
+.cells {
+  border: none;
+  display: flex;
+
+  flex-direction: column;
+  margin: auto;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cell-row {
+  display: flex;
+}
+
+.cell {
+  width: 40pt;
+  height: 40pt;
+
+  margin: 2pt;
+
+  background-color: #eb197b;
+  border-radius: 3pt;
 }
 
 #box {
@@ -34,56 +63,42 @@
   border-radius: 5pt;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+
+  width: fit-content;
+  height: fit-content;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+#toggle-button {
+  position: fixed;
+  display: flex;
+
+  padding: 10pt;
+
+  left: 10pt;
+  top: 10pt;
+  width: 60pt;
+  height: 60pt;
+
+  user-select: none;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.play-button {
+  background-color: #16e487;
+  border-radius: 5pt;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.pause-button {
+  background-color: #eb3e3e;
+  border-radius: 5pt;
+}
+
+.icon {
+  width: 100%;
+  height: 100%;
 }
