@@ -15,6 +15,14 @@ function App() {
     // const [x, setX] = useState<number>(0.0);
     // const [y, setY] = useState<number>(0.0);
 
+    const evalCell = (x: number, y: number, data: CellData[][]) => {
+        if (x >= 0 && x < data[0].length && y >= 0 && y < data.length) {
+            return data[y][x].v;
+        } else {
+            return 0
+        }
+    }
+
     useEffect(() => {
         let cancel: number | undefined = undefined;
         let lastTime: number = Date.now();
@@ -22,11 +30,39 @@ function App() {
             const currentFrameId = cancel;
             cancel = requestAnimationFrame(frame);
 
-            const deltaT = (Date.now() - lastTime) / 1000.0;
+            const deltaT = Date.now() - lastTime;
 
-            if (isPlaying.current && deltaT > 3000) {
+            if (isPlaying.current && deltaT > 500) {
                 lastTime = Date.now()
 
+                if (cellData.current) {
+
+                    const flips: [number, number][] = []
+                    const data = cellData.current
+                    for (let y = 0; y < data.length; y++) {
+                        for (let x = 0; x < data[y].length; x++) {
+                            const neighbors = evalCell(x - 1, y - 1, data)
+                                + evalCell(x, y - 1, data)
+                                + evalCell(x + 1, y - 1, data)
+                                + evalCell(x - 1, y, data)
+                                + evalCell(x + 1, y, data)
+                                + evalCell(x - 1, y + 1, data)
+                                + evalCell(x, y + 1, data)
+                                + evalCell(x + 1, y + 1, data);
+
+                            if (data[y][x].v == 1) {
+                                if (neighbors < 2 || neighbors > 3) {
+                                    flips.push([y, x])
+                                }
+                            } else {
+                                if (neighbors == 3) {
+                                    flips.push([y, x])
+                                }
+                            }
+                        }
+                    }
+                    flips.forEach(([y, x]) => data[y][x].toggle())
+                }
                 console.log('PLAY')
             }
 
@@ -41,6 +77,8 @@ function App() {
                 cancelAnimationFrame(cancel)
         }
     }, [])
+
+    console.log('Render app')
 
     return (
         <div id="container">

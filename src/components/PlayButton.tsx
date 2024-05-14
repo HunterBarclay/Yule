@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { MutableRefObject, useEffect, useState } from "react";
 
 interface PlayButtonProps {
