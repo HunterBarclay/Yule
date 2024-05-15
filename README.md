@@ -1,3 +1,9 @@
 # Yule
 
-Game or something, idk I have too much time on my hands rn.
+Tinkering ground for React.
+
+At the moment, it's a Conway's: Game of Life remake.
+
+## License
+
+[MIT](/LICENSE.md)
