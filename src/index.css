@@ -13,7 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-#container {
+/* #container {
   background-color: #242424;
   color: #ffffff;
 
@@ -21,9 +21,9 @@
 
   position: fixed;
   left: 0pt;
-  right: 0pt;
   top: 0pt;
-  bottom: 0pt;
+  width: 100vw;
+  height: 100vh;
 }
 
 .cells {
@@ -33,7 +33,7 @@
   flex-direction: column;
   margin: auto;
 
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -85,7 +85,11 @@ body {
   width: 60pt;
   height: 60pt;
 
+  justify-content: center;
+  align-items: center;
+
   user-select: none;
+  border-radius: 5pt;
 }
 
 .play-button {
@@ -101,4 +105,7 @@ body {
 .icon {
   width: 100%;
   height: 100%;
-}
+
+  /* https://codepen.io/sosuke/pen/Pjoqqp
+  filter: invert(95%);
+} */

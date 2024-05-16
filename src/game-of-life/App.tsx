@@ -1,44 +1,43 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useRef } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
+import { useEffect, useRef, WheelEvent } from 'react'
 import './App.css'
-// import Tile from './components/Tile';
-import Grid, { CellData } from './components/Grid';
-import PlayButton from './components/PlayButton';
+import Grid, { CellData } from './components/Grid'
+import PlayButton from './components/PlayButton'
+
+const containerPanSpeed: number = 1.0
+const containerOffset: [number, number] = [0, 0]
 
 function App() {
-    // const [count, setCount] = useState(0)
-
-    const cellData = useRef<CellData[][]>(null);
-    const isPlaying = useRef<boolean>(false);
-    // const [x, setX] = useState<number>(0.0);
-    // const [y, setY] = useState<number>(0.0);
+    const cellData = useRef<CellData[][]>(null)
+    const isPlaying = useRef<boolean>(false)
 
     const evalCell = (x: number, y: number, data: CellData[][]) => {
         if (x >= 0 && x < data[0].length && y >= 0 && y < data.length) {
-            return data[y][x].v;
+            return data[y][x].v
         } else {
             return 0
         }
     }
 
     useEffect(() => {
-        let cancel: number | undefined = undefined;
-        let lastTime: number = Date.now();
+        let cancel: number | undefined = undefined
+        let lastTime: number = Date.now()
+
+        // Main Game Loop
         const frame = async () => {
-            const currentFrameId = cancel;
-            cancel = requestAnimationFrame(frame);
+            const currentFrameId = cancel
+            cancel = requestAnimationFrame(frame)
 
-            const deltaT = Date.now() - lastTime;
+            const deltaT = Date.now() - lastTime
 
-            if (isPlaying.current && deltaT > 500) {
+            if (isPlaying.current && deltaT > 300) {
                 lastTime = Date.now()
 
                 if (cellData.current) {
-
                     const flips: [number, number][] = []
                     const data = cellData.current
+                    
+                    // Evaluate Neighbors and determine flips
                     for (let y = 0; y < data.length; y++) {
                         for (let x = 0; x < data[y].length; x++) {
                             const neighbors = evalCell(x - 1, y - 1, data)
@@ -48,7 +47,7 @@ function App() {
                                 + evalCell(x + 1, y, data)
                                 + evalCell(x - 1, y + 1, data)
                                 + evalCell(x, y + 1, data)
-                                + evalCell(x + 1, y + 1, data);
+                                + evalCell(x + 1, y + 1, data)
 
                             if (data[y][x].v == 1) {
                                 if (neighbors < 2 || neighbors > 3) {
@@ -61,16 +60,17 @@ function App() {
                             }
                         }
                     }
+
+                    // Flip once all appropriate cells are identified
                     flips.forEach(([y, x]) => data[y][x].toggle())
                 }
-                console.log('PLAY')
             }
 
             if (currentFrameId)
-                cancelAnimationFrame(currentFrameId);
+                cancelAnimationFrame(currentFrameId)
         }
 
-        frame();
+        frame()
 
         return () => {
             if (cancel)
@@ -80,8 +80,20 @@ function App() {
 
     console.log('Render app')
 
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    const handlePan = (e: WheelEvent<HTMLDivElement>) => {
+        if (containerRef.current) {
+            containerOffset[0] -= e.deltaX * containerPanSpeed
+            containerOffset[1] -= e.deltaY * containerPanSpeed
+            containerRef.current.style.left = `${containerOffset[0]}pt`
+            containerRef.current.style.top = `${containerOffset[1]}pt`
+            console.log(`${containerOffset[0]}, ${containerOffset[1]}`)
+        }
+    }
+
     return (
-        <div id="container">
+        <div id="container" ref={containerRef} onWheel={handlePan}>
             <Grid width={50} height={50} data={cellData} />
             <PlayButton isPlaying={isPlaying} />
             {/* <Tile x={x} y={y} /> */}

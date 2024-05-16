@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { MutableRefObject, useEffect, useState } from "react";
+import './PlayButton.css'
 
 interface PlayButtonProps {
     isPlaying: MutableRefObject<boolean>;
@@ -16,8 +17,8 @@ function PlayButton({isPlaying}: PlayButtonProps) {
     return (
         <div id="toggle-button" className={playing ? "pause-button" : "play-button"} onClick={() => setPlaying((playing) => !playing)}>{
             playing
-                ? "pause"
-                : "play"
+                ? (<img className="icon" src="/pause_icon.svg" />)
+                : (<img className="icon" src="/play_icon.svg" />)
         }</div>
     )
 }

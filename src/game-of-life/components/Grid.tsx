@@ -1,4 +1,5 @@
 import { DispatchWithoutAction, MutableRefObject, useReducer } from "react";
+import './Grid.css'
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 interface GridProps {
@@ -43,15 +44,23 @@ function GridCell({x, y}: GridCellProps) {
     const [, forceUpdate] = useReducer(x => x + 1, 0)
     cellStates[y][x].update = forceUpdate;
 
+    const handleToggle = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault()
+        if ((e.buttons == 1 && e.type == 'mouseover') || (e.buttons < 2 && e.type == 'mousedown')) {
+            console.log("CLICK")
+            cellStates[y][x].toggle()
+        }
+    }
+
     return (
         <div className="cell"
             id="cell"
             style={{backgroundColor: cellStates[y][x].v == 0 ? `#111111` : `#ffffff`}}
             key={`${y},${x}`}
-            onClick={_ => {
-                console.log("CLICK")
-                cellStates[y][x].toggle()
-            }}
+            onMouseOver={handleToggle}
+            onMouseDownCapture={handleToggle}
+            // onClickCapture={handleToggle}
+            onContextMenu={e => e.preventDefault()}
         />
     )
 }
@@ -70,7 +79,7 @@ function Grid({width, height, data}: GridProps) {
     console.log('Grid render')
 
     return (
-        <div onScroll={HandleScroll} className="cells">{
+        <div className="cells">{
             cellStates.map((row, y) => (
                 <div className="cell-row" key={y}>
                 {row.map((_, x) => ( <GridCell key={`${y},${x}`} x={x} y={y} /> ))}
@@ -78,10 +87,6 @@ function Grid({width, height, data}: GridProps) {
             ))
         }</div>
     )
-}
-
-function HandleScroll() {
-
 }
 
 export default Grid;
