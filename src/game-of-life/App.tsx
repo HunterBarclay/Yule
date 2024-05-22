@@ -88,7 +88,6 @@ function App() {
             containerOffset[1] -= e.deltaY * containerPanSpeed
             containerRef.current.style.left = `${containerOffset[0]}pt`
             containerRef.current.style.top = `${containerOffset[1]}pt`
-            console.log(`${containerOffset[0]}, ${containerOffset[1]}`)
         }
     }
 

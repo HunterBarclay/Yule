@@ -47,7 +47,6 @@ function GridCell({x, y}: GridCellProps) {
     const handleToggle = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault()
         if ((e.buttons == 1 && e.type == 'mouseover') || (e.buttons < 2 && e.type == 'mousedown')) {
-            console.log("CLICK")
             cellStates[y][x].toggle()
         }
     }
