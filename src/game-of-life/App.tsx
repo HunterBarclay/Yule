@@ -8,8 +8,18 @@ const containerPanSpeed: number = 1.0
 const containerOffset: [number, number] = [0, 0]
 
 function App() {
-    const cellData = useRef<CellData[][]>(null)
     const isPlaying = useRef<boolean>(false)
+
+    const states: CellData[][] = []
+    for (let y = 0; y < 100; y++) {
+        const row: CellData[] = [];
+        for (let x = 0; x < 100; x++) {
+            row.push(new CellData())
+        }
+        states.push(row)
+    }
+
+    const cellData = useRef<CellData[][]>(states)
 
     const evalCell = (x: number, y: number, data: CellData[][]) => {
         if (x >= 0 && x < data[0].length && y >= 0 && y < data.length) {
@@ -93,7 +103,7 @@ function App() {
 
     return (
         <div id="container" ref={containerRef} onWheel={handlePan}>
-            <Grid width={50} height={50} data={cellData} />
+            <Grid data={cellData} />
             <PlayButton isPlaying={isPlaying} />
             {/* <Tile x={x} y={y} /> */}
         </div>

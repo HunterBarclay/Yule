@@ -1,16 +1,15 @@
-import { DispatchWithoutAction, MutableRefObject, useReducer } from "react";
+import { DispatchWithoutAction, RefObject, useReducer } from "react";
 import './Grid.css'
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 interface GridProps {
-    width: number;
-    height: number;
-    data: MutableRefObject<CellData[][] | null>;
+    data: RefObject<CellData[][]>;
 }
 
 interface GridCellProps {
     x: number;
     y: number;
+    data: RefObject<CellData[][]>;
 }
 
 export class CellData {
@@ -37,24 +36,22 @@ export class CellData {
     }
 }
 
-const cellStates: CellData[][] = [];
-
-function GridCell({x, y}: GridCellProps) {
+function GridCell({x, y, data}: GridCellProps) {
 
     const [, forceUpdate] = useReducer(x => x + 1, 0)
-    cellStates[y][x].update = forceUpdate;
+    data.current![y][x].update = forceUpdate;
 
     const handleToggle = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault()
         if ((e.buttons == 1 && e.type == 'mouseover') || (e.buttons < 2 && e.type == 'mousedown')) {
-            cellStates[y][x].toggle()
+            data.current![y][x].toggle()
         }
     }
 
     return (
         <div className="cell"
             id="cell"
-            style={{backgroundColor: cellStates[y][x].v == 0 ? `#111111` : `#ffffff`}}
+            style={{backgroundColor: data.current![y][x].v == 0 ? `#111111` : `#ffffff`}}
             key={`${y},${x}`}
             onMouseOver={handleToggle}
             onMouseDownCapture={handleToggle}
@@ -64,28 +61,24 @@ function GridCell({x, y}: GridCellProps) {
     )
 }
 
-function Grid({width, height, data}: GridProps) {
-
-    for (let y = 0; y < height; y++) {
-        const row: CellData[] = [];
-        for (let x = 0; x < width; x++) {
-            row.push(new CellData())
-        }
-        cellStates.push(row)
-    }
-    data.current = cellStates;
+function Grid({data}: GridProps) {
 
     console.log('Grid render')
 
-    return (
-        <div className="cells">{
-            cellStates.map((row, y) => (
-                <div className="cell-row" key={y}>
-                {row.map((_, x) => ( <GridCell key={`${y},${x}`} x={x} y={y} /> ))}
-                </div>
-            ))
-        }</div>
-    )
+    if (!data.current) {
+        return (<></>)
+    } else {
+        return (
+            <div className="cells">{
+                data.current!.map((row, y) => (
+                    <div className="cell-row" key={y}>
+                    {row.map((_, x) => ( <GridCell key={`${y},${x}`} data={data} x={x} y={y} /> ))}
+                    </div>
+                ))
+            }</div>
+        )
+    }
+    
 }
 
 export default Grid;
